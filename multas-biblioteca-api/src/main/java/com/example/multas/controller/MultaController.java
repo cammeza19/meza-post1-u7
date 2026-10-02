@@ -3,9 +3,8 @@ package com.example.multas.controller;
 import com.example.multas.model.Multa;
 import com.example.multas.service.MultaService;
 import jakarta.validation.Valid;
-import jakarta.validation.constraints.Min;
-import jakarta.validation.constraints.NotBlank;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -21,34 +20,34 @@ public class MultaController {
     }
 
     @GetMapping
-    public List<Multa> listar() {
-        return multaService.listarTodas();
-    }
-
-    @GetMapping("/{id}")
-    public Multa buscar(@PathVariable Long id) {
-        return multaService.buscarPorId(id);
+    public ResponseEntity<List<Multa>> listarTodas() {
+        return ResponseEntity.ok(multaService.listarTodas());
     }
 
     @GetMapping("/estudiante/{estudianteId}")
-    public List<Multa> listarPorEstudiante(@PathVariable String estudianteId) {
-        return multaService.listarPorEstudiante(estudianteId);
+    public ResponseEntity<List<Multa>> listarPorEstudiante(@PathVariable String estudianteId) {
+        return ResponseEntity.ok(multaService.listarPorEstudiante(estudianteId));
+    }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<Multa> buscarPorId(@PathVariable Long id) {
+        return ResponseEntity.ok(multaService.buscarPorId(id));
     }
 
     @PostMapping
-    @ResponseStatus(HttpStatus.CREATED)
-    public Multa generar(@Valid @RequestBody GenerarMultaRequest request) {
-        return multaService.generar(request.estudianteId(), request.concepto(), request.diasAtraso());
+    public ResponseEntity<Multa> generar(@Valid @RequestBody MultaRequest request) {
+        Multa creada = multaService.generar(request.getEstudianteId(), request.getConcepto(), request.getDiasAtraso());
+        return ResponseEntity.status(HttpStatus.CREATED).body(creada);
     }
 
     @PatchMapping("/{id}/pagar")
-    public Multa pagarEnVentanilla(@PathVariable Long id) {
-        return multaService.pagarEnVentanilla(id);
+    public ResponseEntity<Multa> pagarEnVentanilla(@PathVariable Long id) {
+        return ResponseEntity.ok(multaService.pagarEnVentanilla(id));
+    }
+
+    // NUEVO ENDPOINT: Pago en línea con pasarela
+    @PostMapping("/{id}/pagar-linea")
+    public ResponseEntity<Multa> pagarConPasarela(@PathVariable Long id) {
+        return ResponseEntity.ok(multaService.pagarConPasarela(id));
     }
 }
-
-record GenerarMultaRequest(
-        @NotBlank(message = "El código de estudiante es obligatorio") String estudianteId,
-        @NotBlank(message = "El concepto es obligatorio") String concepto,
-        @Min(value = 1, message = "Los días de atraso deben ser al menos 1") int diasAtraso
-) {}
