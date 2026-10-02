@@ -57,28 +57,28 @@ El mayor reto al decidir entre extender las capas o introducir un puerto de domi
 ## Evidencia de Endpoints Probados
 
 - `GET /api/multas` - Listar multas vacías (`200 OK`)
-  ![Listar multas vacías](./capturas/01_listar_vacio.jpeg)
+  ![Listar multas vacías](multas-biblioteca-api/capturas/01_listar_vacio.jpeg)
 
 - `POST /api/multas` - Crear multa válida (`201 Created`)
-  ![Crear multa válida](./capturas/02_crear_multa_exitosa.jpeg)
+  ![Crear multa válida](multas-biblioteca-api/capturas/02_crear_multa_exitosa.jpeg)
 
 - `POST /api/multas` - Error de validación DTO (`400 Bad Request`)
-  ![Error de validación DTO](./capturas/03_error_validacion_400.jpeg)
+  ![Error de validación DTO](multas-biblioteca-api/capturas/03_error_validacion_400.jpeg)
 
 - `POST /api/multas` - Límite de multas pendientes superado (`409 Conflict`)
-  ![Límite de multas superado](./capturas/04_limites_multas_409.jpeg)
+  ![Límite de multas superado](multas-biblioteca-api/capturas/04_limites_multas_409.jpeg)
 
 - `GET /api/multas/{id}` - Multa no encontrada (`404 Not Found`)
-  ![Multa no encontrada](./capturas/05_multa_no_encontrada_404.jpeg)
+  ![Multa no encontrada](multas-biblioteca-api/capturas/05_multa_no_encontrada_404.jpeg)
 
 - `PATCH /api/multas/{id}/pagar` - Pago en ventanilla (`200 OK`)
-  ![Pago en ventanilla](./capturas/06_pago_ventanilla_200.jpeg)
+  ![Pago en ventanilla](multas-biblioteca-api/capturas/06_pago_ventanilla_200.jpeg)
 
 - `POST /api/multas/{id}/pagar-linea` - Pago en línea rechazado/indisponible (`402 Payment Required`)
-  ![Pago en línea rechazado](./capturas/07_pago_linea_rechazado_402.jpeg)
+  ![Pago en línea rechazado](multas-biblioteca-api/capturas/07_pago_linea_rechazado_402.jpeg)
 
 - `POST /api/multas/{id}/pagar-linea` - Pago en línea de multa ya pagada (`409 Conflict`)
-  ![Pago en línea multa ya pagada](./capturas/08_pago_linea_ya_pagada_409.jpeg)
+  ![Pago en línea multa ya pagada](multas-biblioteca-api/capturas/08_pago_linea_ya_pagada_409.jpeg)
 
 ---
 ## Instrucciones de Ejecución
