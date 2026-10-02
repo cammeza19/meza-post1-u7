@@ -42,11 +42,11 @@ public class MultaService {
 
     public Multa generar(String estudianteId, String concepto, int diasAtraso) {
         long pendientes = multaRepository.countByEstudianteIdAndEstado(estudianteId, EstadoMulta.PENDIENTE);
-        if (pendientes >= LIMITE_MULTAS_PENDIENTES) {
-            throw new LimiteMultasPendientesException(
+            if (pendientes >= LIMITE_MULTAS_PENDIENTES) {
+                throw new LimiteMultasPendientesException(
                     "El estudiante " + estudianteId + " ya tiene " + pendientes + " multas pendientes (limite: "
                             + LIMITE_MULTAS_PENDIENTES + ")"
-            );
+                );
         }
 
         Multa multa = new Multa();

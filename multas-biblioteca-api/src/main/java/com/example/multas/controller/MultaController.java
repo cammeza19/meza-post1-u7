@@ -45,8 +45,7 @@ public class MultaController {
         return ResponseEntity.ok(multaService.pagarEnVentanilla(id));
     }
 
-    // NUEVO ENDPOINT: Pago en línea con pasarela
-    @PostMapping("/{id}/pagar-linea")
+    @PostMapping("/{id}/pagar-en-linea")
     public ResponseEntity<Multa> pagarConPasarela(@PathVariable Long id) {
         return ResponseEntity.ok(multaService.pagarConPasarela(id));
     }

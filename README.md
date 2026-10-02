@@ -34,9 +34,14 @@ El record `ResultadoPago` es una estructura de transferencia neutral que unifica
 
 ### Trade-off considerado — Parte 2
 
-Para la Parte 2 se descartaron las Opciones A (condicionales `if/switch` en el servicio) y B (interfaz Strategy interna en `service/`) en favor de la Opción C (Puerto de Dominio con Adaptadores de Infraestructura). Esta elección garantizó desacoplamiento total, inversión de dependencias estricta y código de aplicación inalterable ante cambios en los proveedores.
+La Opción A se descartó porque `MultaService` habría tenido que conocer el contrato
+HTTP de ambas pasarelas (centavos y `reference/status` en Wompi, `idTransaccion/
+estadoTransaccion` en PagosUDES), y agregar o retirar una pasarela tras el piloto
+habría obligado a modificar un Service ya probado. La Opción B también resuelve la
+intercambiabilidad, pero deja el contrato y su tipo de resultado dentro de `service/`,
+mezclados con la orquestación; con B se sacrificaría el aislamiento del núcleo respecto
+a los formatos externos, que es justo lo que pide el requisito.
 
-No obstante, el costo asumido incluyó la adición de dos nuevos paquetes (`domain` e `infrastructure`), la creación de más interfaces y clases tradutoras de DTOs, y un ligero incremento en la sobrecarga mental al navegar entre capas. Si el piloto finalizara y se adoptara definitivamente una única pasarela institucional sin perspectiva de cambio, el equipo evaluaría revertir hacia una arquitectura en capas extendida (Opción B) para reducir la cantidad de artefactos del proyecto sin perder la abstracción básica.
 
 ## Herramientas utilizadas
 
@@ -74,39 +79,28 @@ El mayor reto al decidir entre extender las capas o introducir un puerto de domi
 - `PATCH /api/multas/{id}/pagar` - Pago en ventanilla (`200 OK`)
   ![Pago en ventanilla](multas-biblioteca-api/capturas/06_pago_ventanilla_200.jpeg)
 
-- `POST /api/multas/{id}/pagar-linea` - Pago en línea rechazado/indisponible (`402 Payment Required`)
-  ![Pago en línea rechazado](multas-biblioteca-api/capturas/07_pago_linea_rechazado_402.jpeg)
+- `POST /api/multas/{id}/pagar-en-linea` - Pago exitoso con PagosUDES (`200 OK`)
+  ![Pago exitoso PagosUDES](multas-biblioteca-api/capturas/07a_pago_linea_pagosudes_200.jpeg)
+
+- `POST /api/multas/{id}/pagar-en-linea` - Pago exitoso con Wompi (`200 OK`)
+  ![Pago exitoso Wompi](multas-biblioteca-api/capturas/07b_pago_linea_wompi_200.jpeg)
+
+- `POST /api/multas/{id}/pagar-en-linea` - Pago rechazado/indisponible PagosUDES (`402 Payment Required`)
+  ![Pago rechazado PagosUDES](multas-biblioteca-api/capturas/07c_pago_linea_pagosudes_402.jpeg)
+
+- `POST /api/multas/{id}/pagar-en-linea` - Pago rechazado/indisponible Wompi (`402 Payment Required`)
+  ![Pago rechazado Wompi](multas-biblioteca-api/capturas/07d_pago_linea_wompi_402.jpeg)
 
 - `POST /api/multas/{id}/pagar-linea` - Pago en línea de multa ya pagada (`409 Conflict`)
   ![Pago en línea multa ya pagada](multas-biblioteca-api/capturas/08_pago_linea_ya_pagada_409.jpeg)
 
 ---
-## Instrucciones de Ejecución
+## Cómo ejecutar
 
-1. Clonar el repositorio:
-
-   ```bash
-   git clone https://github.com/cammeza19/meza-post1-u7.git
-   cd meza-post1-u7/multas-biblioteca-api
-
-2. Ejecutar la aplicación:
-
-   ```bash
-   ./mvnw spring-boot:run
-   ```
-
-3. La API estará disponible en:
-
-   ```bash
-   http://localhost:8080/api/multas
-   ```
-
-
-4. La consola H2 estará disponible en:
-
-   ```bash
-   http://localhost:8080/h2-console
-   ```
+```bash
+cd meza-post1-u7/multas-biblioteca-api
+./mvnw spring-boot:run
+```
 
 ### Estructura de Paquetes
 ```text
